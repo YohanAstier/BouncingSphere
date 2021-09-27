@@ -313,23 +313,23 @@ bool InterSegPlane(Segment s, Plane p, Vector3& interPt, Vector3& interNormalPt)
 }
 
 void MyDrawQuad(Vector3 center, Vector2 size, Color color) {
-	DrawTriangle3D(center, { center.x + size.x, 0, center.z + size.y }, { center.x + size.x, 0, center.z - size.y }, color); //triangle droite
-	DrawTriangle3D(center, { center.x + size.x, 0, center.z - size.y }, { center.x - size.x, 0, center.z - size.y }, color); //triangle bas
-	DrawTriangle3D(center, { center.x - size.x, 0, center.z - size.y }, { center.x - size.x, 0, center.z + size.y }, color); //triangle gauche
-	DrawTriangle3D(center, { center.x - size.x, 0, center.z + size.y }, { center.x + size.x, 0, center.z + size.y }, color); //triangle haut
+	DrawTriangle3D(center, { center.x + size.x, center.y , center.z + size.y }, { center.x + size.x, center.y, center.z - size.y }, color); //triangle droite
+	DrawTriangle3D(center, { center.x + size.x, center.y, center.z - size.y }, { center.x - size.x, center.y, center.z - size.y }, color); //triangle bas
+	DrawTriangle3D(center, { center.x - size.x, center.y, center.z - size.y }, { center.x - size.x, center.y, center.z + size.y }, color); //triangle gauche
+	DrawTriangle3D(center, { center.x - size.x, center.y, center.z + size.y }, { center.x + size.x, center.y, center.z + size.y }, color); //triangle haut
 }
 
 void MyDrawQuadWire(Vector3 center, Vector2 size, Color color) {
 
-	DrawLine3D({ center.x + size.x, 0, center.z + size.y }, { center.x + size.x, 0, center.z - size.y }, color);
-	DrawLine3D({ center.x + size.x, 0, center.z - size.y }, { center.x - size.x, 0, center.z - size.y }, color); 
-	DrawLine3D({ center.x - size.x, 0, center.z - size.y }, { center.x - size.x, 0, center.z + size.y }, color);
-	DrawLine3D({ center.x - size.x, 0, center.z + size.y }, { center.x + size.x, 0, center.z + size.y }, color);
+	DrawLine3D({ center.x + size.x, center.y, center.z + size.y }, { center.x + size.x, center.y, center.z - size.y }, color);
+	DrawLine3D({ center.x + size.x, center.y, center.z - size.y }, { center.x - size.x, center.y, center.z - size.y }, color);
+	DrawLine3D({ center.x - size.x, center.y, center.z - size.y }, { center.x - size.x, center.y, center.z + size.y }, color);
+	DrawLine3D({ center.x - size.x, center.y, center.z + size.y }, { center.x + size.x, center.y, center.z + size.y }, color);
 
-	DrawLine3D(center, { center.x + size.x, 0, center.z - size.y }, color);
-	DrawLine3D(center, { center.x - size.x, 0, center.z - size.y }, color);
-	DrawLine3D(center, { center.x - size.x, 0, center.z + size.y }, color);
-	DrawLine3D(center, { center.x + size.x, 0, center.z + size.y }, color);
+	DrawLine3D(center, { center.x + size.x, center.y, center.z - size.y }, color);
+	DrawLine3D(center, { center.x - size.x, center.y, center.z - size.y }, color);
+	DrawLine3D(center, { center.x - size.x, center.y, center.z + size.y }, color);
+	DrawLine3D(center, { center.x + size.x, center.y, center.z + size.y }, color);
 
 
 
