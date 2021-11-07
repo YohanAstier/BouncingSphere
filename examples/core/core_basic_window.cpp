@@ -432,7 +432,7 @@ void MyDrawSphereTrianglesAndWiresEx(Vector3 centerPos, float radius, int nSegme
 	rlPopMatrix();
 }
 
-bool InterSegPlane(Segment s, Plane p, Vector3& interPt, Vector3& interNormalPt) {
+bool InterSegPlane(Segment s, Plane p, Vector3* interPt, Vector3* interNormalPt) {
 	Vector3 ab = Vector3Subtract(s.pt2, s.pt1);
 	float dotAB = Vector3DotProduct(ab, p.normal);
 	if (fabs(dotAB < EPSILON)) return false;
@@ -440,9 +440,9 @@ bool InterSegPlane(Segment s, Plane p, Vector3& interPt, Vector3& interNormalPt)
 	float t = (p.d - Vector3DotProduct(s.pt1, p.normal));
 	if (t < 0 || t > 1) return false;
 
-	interPt = Vector3Add(s.pt1, Vector3Scale(ab, t));
-	if (dotAB < 0) interNormalPt = p.normal;
-	else interNormalPt = Vector3Multiply({ -1,-1,-1 }, p.normal);
+	*interPt = Vector3Add(s.pt1, Vector3Scale(ab, t));
+	if (dotAB < 0) *interNormalPt = p.normal;
+	else *interNormalPt = Vector3Multiply({ -1,-1,-1 }, p.normal);
 
 	return true;
 }
@@ -493,6 +493,7 @@ bool InterSegmentSphere(Segment seg, Sphere s, Vector3* interPt) {
 }
 
 void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCaps, Color color) {
+	//on met en place l'espace de modélisation
 	rlPushMatrix();
 
 	rlTranslatef(cyl.pt1.x, cyl.pt1.y, cyl.pt1.z);
@@ -506,9 +507,10 @@ void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCap
 	Vector3 vector;
 	QuaternionToAxisAngle(quater, &vector, &angle);
 
-
+	
 	rlRotatef(quater.w * RAD2DEG, quater.x, quater.y, quater.z);
 	rlRotatef(q.w * RAD2DEG, q.x, q.y, q.z);
+	
 	
 	rlColor4ub(color.r, color.g, color.b, color.a);
 
@@ -553,8 +555,6 @@ void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCap
 
 	rlEnd();
 	rlPopMatrix();
-
-	
 	
 };
 
@@ -652,7 +652,7 @@ int main(int argc, char* argv[])
 			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
 
 			Cylinder cylinder = { {10,0,0}, {10,5,0}, 2 };
-			MyDrawCylinder({ 0,0,0,0 }, cylinder,28, true, RED);
+			MyDrawCylinder({ 1,1,0,45 }, cylinder,28, true, RED);
 		}
 		EndMode3D();
 
