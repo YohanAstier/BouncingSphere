@@ -35,6 +35,7 @@
 #define EPSILON 1.e-6f
 
 void MyDrawSphereEx(Vector3 centerPos, float radius, int rings, int slices, Color color);
+void MyDrawDisk(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, Color color);
 
 template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
@@ -490,20 +491,72 @@ bool InterSegmentSphere(Segment seg, Sphere s, Vector3* interPt) {
 	return true;
 
 }
-//
-//void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCaps, Color color) {
-//	rlPushMatrix();
-//	rlTranslatef(cyl.pt1.x, cyl.pt1.y, cyl.pt1.z);
-//
-//	Vector3 height = Vector3Subtract(cyl.pt2, cyl.pt1);
-//	float size = Vector3Length(height);
-//	rlScalef(cyl.radius, size, cyl.radius);
-//
-//	Quaternion quater = QuaternionFromVector3ToVector3({ 1, 0, 0 }, Vector3Normalize(height));
-//	float* angle = 0;
-//	Vector3* vector = NULL;
-//	QuaternionToAxisAngle(quater, vector, angle);
-//};
+
+void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCaps, Color color) {
+	rlPushMatrix();
+
+	rlTranslatef(cyl.pt1.x, cyl.pt1.y, cyl.pt1.z);
+
+	Vector3 height = Vector3Subtract(cyl.pt2, cyl.pt1);
+	float size = Vector3Length(height);
+	rlScalef(cyl.radius, size, cyl.radius);
+
+	Quaternion quater = QuaternionFromVector3ToVector3({ 1, 0, 0 }, Vector3Normalize(height));
+	float angle;
+	Vector3 vector;
+	QuaternionToAxisAngle(quater, &vector, &angle);
+
+
+	rlRotatef(quater.w * RAD2DEG, quater.x, quater.y, quater.z);
+	rlRotatef(q.w * RAD2DEG, q.x, q.y, q.z);
+	
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+	
+	//on dessine chaque triangle
+	for (int i = 0; i < nSegmentsTheta; i++) {
+		Vector3 p1 = SphericalToCartesian(Spherical{
+			1, i * deltaTheta, PI / 2
+			});
+		int y = i + 1;
+		Vector3 p2 = SphericalToCartesian(Spherical{
+			1, y * deltaTheta, PI / 2
+			});
+
+
+		//on effectue 2 triangles pour constituer un rectangle
+		// et 2 fois pour chaque coté du cylindre
+		rlBegin(RL_TRIANGLES);
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p1.x, cyl.pt1.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+
+		rlVertex3f(p1.x, cyl.pt1.y, p1.z);
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+
+	}
+	if (drawCaps) {
+		//on rajoute les extrémités si souhaité
+		MyDrawDisk({ 0,0,0,0 }, cyl.pt2, 2, 1, color);
+		MyDrawDisk({ 0,0,0,0 }, cyl.pt1, 1, nSegmentsTheta, color);
+	}
+
+	rlEnd();
+	rlPopMatrix();
+
+	
+	
+};
 
 void MyDrawDisk(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, Color color) {
 	rlPushMatrix();
@@ -513,18 +566,23 @@ void MyDrawDisk(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, 
 	rlColor4ub(color.r, color.g, color.b, color.a);
 	float deltaTheta = 2 * PI / nSegmentsTheta;
 	for (int i = 0; i < nSegmentsTheta; i++) {
-		Vector3 firstPoint = SphericalToCartesian(Spherical{
+		Vector3 p1 = SphericalToCartesian(Spherical{
 			1, i * deltaTheta, PI / 2
 			});
 		int y = i + 1;
-		Vector3 secondPoint = SphericalToCartesian(Spherical{
+		Vector3 p2 = SphericalToCartesian(Spherical{
 			1, y * deltaTheta, PI / 2
 			});
 		rlBegin(RL_TRIANGLES);
 		rlVertex3f(0, center.y, 0);
-		rlVertex3f(firstPoint.x, center.y, firstPoint.z);
-		rlVertex3f(secondPoint.x, center.y, secondPoint.z);
+		rlVertex3f(p1.x, center.y, p1.z);
+		rlVertex3f(p2.x, center.y, p2.z);
+
+		rlVertex3f(p1.x, center.y, p1.z);
+		rlVertex3f(0, center.y, 0);
+		rlVertex3f(p2.x, center.y, p2.z);
 	}
+	
 	rlEnd();
 	rlPopMatrix();
 
@@ -591,7 +649,10 @@ int main(int argc, char* argv[])
 			DrawSphere({ 10,0,0 }, .2f, RED);
 			DrawSphere({ 0,0,10 }, .2f, BLUE);
 			DrawSphere({ 0,10,0 }, .2f, GREEN);
-			MyDrawDisk({ 1,1,1,1 }, { 0,0,0 }, 1, 5, RED);
+			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
+
+			Cylinder cylinder = { {10,0,0}, {10,5,0}, 2 };
+			MyDrawCylinder({ 0,0,0,0 }, cylinder,28, true, RED);
 		}
 		EndMode3D();
 
