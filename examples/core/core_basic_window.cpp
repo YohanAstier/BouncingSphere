@@ -411,7 +411,7 @@ void MyDrawSphereTrianglesAndWiresEx(Vector3 centerPos, float radius, int nSegme
 
 			rlBegin(RL_LINES);
 			rlColor4ub(wiresColor.r, wiresColor.g, wiresColor.b, wiresColor.a);
-			rlVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z);
+			rlVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z); 
 			rlVertex3f(topLeft.x, topLeft.y, topLeft.z);
 
 			rlVertex3f(topLeft.x, topLeft.y, topLeft.z);
@@ -505,6 +505,31 @@ bool InterSegmentSphere(Segment seg, Sphere s, Vector3* interPt) {
 //	QuaternionToAxisAngle(quater, vector, angle);
 //};
 
+void MyDrawDisk(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, Color color) {
+	rlPushMatrix();
+	rlRotatef(q.w * RAD2DEG, q.x, q.y, q.z);
+	rlScalef(radius, radius, radius);
+	
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+	for (int i = 0; i < nSegmentsTheta; i++) {
+		Vector3 firstPoint = SphericalToCartesian(Spherical{
+			1, i * deltaTheta, PI / 2
+			});
+		int y = i + 1;
+		Vector3 secondPoint = SphericalToCartesian(Spherical{
+			1, y * deltaTheta, PI / 2
+			});
+		rlBegin(RL_TRIANGLES);
+		rlVertex3f(0, center.y, 0);
+		rlVertex3f(firstPoint.x, center.y, firstPoint.z);
+		rlVertex3f(secondPoint.x, center.y, secondPoint.z);
+	}
+	rlEnd();
+	rlPopMatrix();
+
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -566,9 +591,7 @@ int main(int argc, char* argv[])
 			DrawSphere({ 10,0,0 }, .2f, RED);
 			DrawSphere({ 0,0,10 }, .2f, BLUE);
 			DrawSphere({ 0,10,0 }, .2f, GREEN);
-
-			MyDrawQuadWire({ 10,0,0 }, { 5,5 }, GOLD);
-			
+			MyDrawDisk({ 1,1,1,1 }, { 0,0,0 }, 1, 5, RED);
 		}
 		EndMode3D();
 
