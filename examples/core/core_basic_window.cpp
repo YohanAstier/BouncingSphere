@@ -500,16 +500,15 @@ void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCap
 
 	Vector3 height = Vector3Subtract(cyl.pt2, cyl.pt1);
 	float size = Vector3Length(height);
+	
 	rlScalef(cyl.radius, size, cyl.radius);
-
-	Quaternion quater = QuaternionFromVector3ToVector3({ 1, 0, 0 }, Vector3Normalize(height));
 	float angle;
 	Vector3 vector;
-	QuaternionToAxisAngle(quater, &vector, &angle);
+	QuaternionToAxisAngle(q, &vector, &angle);
 
 	
-	rlRotatef(quater.w * RAD2DEG, quater.x, quater.y, quater.z);
-	rlRotatef(q.w * RAD2DEG, q.x, q.y, q.z);
+	rlRotatef(angle * RAD2DEG, vector.x, vector.y, vector.z);
+	
 	
 	
 	rlColor4ub(color.r, color.g, color.b, color.a);
@@ -651,8 +650,8 @@ int main(int argc, char* argv[])
 			DrawSphere({ 0,10,0 }, .2f, GREEN);
 			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
 
-			Cylinder cylinder = { {10,0,0}, {10,5,0}, 2 };
-			MyDrawCylinder({ 1,1,0,45 }, cylinder,28, true, RED);
+			Cylinder cylinder = { {0,0,0}, {0,2,0}, 2.f };
+			MyDrawCylinder(QuaternionIdentity(), cylinder, 28, true, RED);
 		}
 		EndMode3D();
 
