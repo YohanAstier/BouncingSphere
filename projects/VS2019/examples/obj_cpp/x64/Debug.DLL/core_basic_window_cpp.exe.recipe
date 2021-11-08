@@ -2,10 +2,10 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\benfi\Documents\ESIEE\Projects\BouncingSphere\projects\VS2019\bin\x64\Debug.DLL\raylib.dll</FullPath>
+      <FullPath>D:\travail\Esiee\E1\Math3D\GIT\BouncingSphere\projects\VS2019\bin\x64\Debug.DLL\raylib.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\benfi\Documents\ESIEE\Projects\BouncingSphere\projects\VS2019\bin\x64\Debug.DLL\core_basic_window_cpp.exe</FullPath>
+      <FullPath>D:\travail\Esiee\E1\Math3D\GIT\BouncingSphere\projects\VS2019\bin\x64\Debug.DLL\core_basic_window_cpp.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

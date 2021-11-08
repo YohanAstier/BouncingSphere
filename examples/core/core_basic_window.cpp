@@ -587,6 +587,70 @@ void MyDrawDisk(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, 
 
 }
 
+void MyDrawQuadRotative(Quaternion q, Vector3 center, Vector2 size, Color color) {
+	rlPushMatrix();
+
+	float angle;
+	Vector3 vector;
+	QuaternionToAxisAngle(q, &vector, &angle);
+	rlRotatef(angle * RAD2DEG, vector.x, vector.y, vector.z);
+
+	rlTranslatef(center.x, center.y, center.z);
+	rlScalef(size.x, 0, size.y);
+	
+
+
+
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	//FACE DESSOUS
+	//triangle 1
+	rlBegin(RL_TRIANGLES);
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(-1, 0, -1);
+	rlVertex3f(1, 0, -1);
+
+	//triangle 2
+	rlVertex3f(1, 0, 1);
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(1, 0, -1);
+
+	//triangle 3
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(1, 0, 1);
+	rlVertex3f(-1, 0, 1);
+
+	//triangle 4
+	rlVertex3f(-1, 0, -1);
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(-1, 0, 1);
+
+	//FACE DESSUS
+	//triangle 1
+	rlBegin(RL_TRIANGLES);
+	rlVertex3f(-1, 0, -1);
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(1, 0, -1);
+
+	//triangle 2
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(1, 0, 1);
+	rlVertex3f(1, 0, -1);
+
+	//triangle 3
+	rlVertex3f(1, 0, 1);
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(-1, 0, 1);
+
+	//triangle 4
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(-1, 0, -1);
+	rlVertex3f(-1, 0, 1);
+
+	rlEnd();
+	rlPopMatrix();
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -650,8 +714,11 @@ int main(int argc, char* argv[])
 			DrawSphere({ 0,10,0 }, .2f, GREEN);
 			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
 
-			Cylinder cylinder = { {0,0,0}, {0,2,0}, 2.f };
-			MyDrawCylinder(QuaternionIdentity(), cylinder, 28, true, RED);
+			//Cylinder cylinder = { {0,0,0}, {0,2,0}, 2.f };
+			//MyDrawCylinder(QuaternionIdentity(), cylinder, 28, true, RED);
+			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ 1,3,-4 }), time);
+
+			MyDrawQuadRotative(qOrient, { 0,0,0 }, { 1,1 }, BLUE);
 		}
 		EndMode3D();
 
