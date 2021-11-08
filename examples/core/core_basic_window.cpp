@@ -652,6 +652,38 @@ void MyDrawQuadRotative(Quaternion q, Vector3 center, Vector2 size, Color color)
 }
 
 
+void MyDrawDiskWire(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, Color color) {
+	rlPushMatrix();
+	rlRotatef(q.w * RAD2DEG, q.x, q.y, q.z);
+	rlScalef(radius, radius, radius);
+	rlBegin(RL_LINES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+	for (int i = 0; i < nSegmentsTheta; i++) {
+		Vector3 p1 = SphericalToCartesian(Spherical{
+			1, i * deltaTheta, PI / 2
+			});
+		int y = i + 1;
+		Vector3 p2 = SphericalToCartesian(Spherical{
+			1, y * deltaTheta, PI / 2
+			});
+		
+		rlVertex3f(0, center.y, 0);
+		rlVertex3f(p1.x, center.y, p1.z);
+
+		rlVertex3f(0, center.y, 0);
+		rlVertex3f(p2.x, center.y, p2.z);
+
+		rlVertex3f(p1.x, center.y, p1.z);
+		rlVertex3f(p2.x, center.y, p2.z);
+
+	}
+
+	rlEnd();
+	rlPopMatrix();
+
+}
+
 int main(int argc, char* argv[])
 {
 	// Initialization
@@ -716,9 +748,9 @@ int main(int argc, char* argv[])
 
 			//Cylinder cylinder = { {0,0,0}, {0,2,0}, 2.f };
 			//MyDrawCylinder(QuaternionIdentity(), cylinder, 28, true, RED);
-			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ 1,3,-4 }), time);
+			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ time*10,time*100,time*1000}), time);
 
-			MyDrawQuadRotative(qOrient, { 0,0,0 }, { 1,1 }, BLUE);
+			MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);
 		}
 		EndMode3D();
 
