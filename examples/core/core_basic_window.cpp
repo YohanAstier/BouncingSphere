@@ -548,7 +548,7 @@ void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCap
 	}
 	if (drawCaps) {
 		//on rajoute les extrémités si souhaité
-		MyDrawDisk({ 0,0,0,0 }, cyl.pt2, 2, 1, color);
+		MyDrawDisk({ 0,0,0,0 }, cyl.pt2, 1, nSegmentsTheta, color);
 		MyDrawDisk({ 0,0,0,0 }, cyl.pt1, 1, nSegmentsTheta, color);
 	}
 
@@ -684,6 +684,352 @@ void MyDrawDiskWire(Quaternion q, Vector3 center, float radius, int nSegmentsThe
 
 }
 
+void MyDrawCylinderWire(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCaps, Color color) {
+	//on met en place l'espace de modélisation
+	rlPushMatrix();
+
+	rlTranslatef(cyl.pt1.x, cyl.pt1.y, cyl.pt1.z);
+
+	Vector3 height = Vector3Subtract(cyl.pt2, cyl.pt1);
+	float size = Vector3Length(height);
+
+	rlScalef(cyl.radius, size, cyl.radius);
+	float angle;
+	Vector3 vector;
+	QuaternionToAxisAngle(q, &vector, &angle);
+
+
+	rlRotatef(angle * RAD2DEG, vector.x, vector.y, vector.z);
+
+
+
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+
+	//on dessine chaque triangle
+	for (int i = 0; i < nSegmentsTheta; i++) {
+		Vector3 p1 = SphericalToCartesian(Spherical{
+			1, i * deltaTheta, PI / 2
+			});
+		int y = i + 1;
+		Vector3 p2 = SphericalToCartesian(Spherical{
+			1, y * deltaTheta, PI / 2
+			});
+
+		
+		// et 2 fois pour chaque coté du cylindre
+		rlBegin(RL_LINES);
+		//triangle 1
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+		//triangle 2
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+	}
+	if (drawCaps) {
+		//on rajoute les extrémités si souhaité
+		MyDrawDiskWire({ 0,0,0,0 }, cyl.pt2, 1, nSegmentsTheta, color);
+		MyDrawDiskWire({ 0,0,0,0 }, cyl.pt1, 1, nSegmentsTheta, color);
+	}
+
+	rlEnd();
+	rlPopMatrix();
+
+};
+
+void MyDrawSphereWires(Vector3 centerPos, float radius, int nSegmentsTheta, int nSegmentsPhi, Color wiresColor)
+{
+	if (nSegmentsTheta < 3 || nSegmentsPhi < 2) return;
+
+	std::vector<Vector3> vertexBufferTheta(nSegmentsTheta + 1);
+	std::fill(vertexBufferTheta.begin(), vertexBufferTheta.end(), Vector3{ 0,radius,0 });
+
+	int numVertex = nSegmentsTheta * nSegmentsPhi * 10;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+	rlPushMatrix();
+	// NOTE: Transformation is applied in inverse order (scale -> translate)
+	rlTranslatef(centerPos.x, centerPos.y, centerPos.z);
+	rlScalef(radius, radius, radius);
+
+
+	float deltaPhi = PI / nSegmentsPhi;
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+
+	float phi = 0;
+	for (int i = 0; i < nSegmentsPhi; i++)
+	{
+		float theta = 0;
+		Vector3 tmpBottomLeft = SphericalToCartesian(Spherical{ radius,theta,phi + deltaPhi });
+
+		for (int j = 0; j < nSegmentsTheta; j++)
+		{
+			Vector3 topLeft = vertexBufferTheta[j];
+			Vector3 bottomLeft = tmpBottomLeft;
+			Vector3 topRight = vertexBufferTheta[j + 1];
+			Vector3 bottomRight = SphericalToCartesian(Spherical{ radius,theta + deltaTheta,phi + deltaPhi });
+
+			rlBegin(RL_LINES);
+			rlColor4ub(wiresColor.r, wiresColor.g, wiresColor.b, wiresColor.a);
+			rlVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z);
+			rlVertex3f(topLeft.x, topLeft.y, topLeft.z);
+
+			rlVertex3f(topLeft.x, topLeft.y, topLeft.z);
+			rlVertex3f(topRight.x, topRight.y, topRight.z);
+			rlEnd();
+
+
+			theta += deltaTheta;
+
+			vertexBufferTheta[j] = tmpBottomLeft;
+			tmpBottomLeft = bottomRight;
+		}
+		vertexBufferTheta[vertexBufferTheta.size() - 1] = vertexBufferTheta[0];
+		phi += deltaPhi;
+	}
+
+	rlPopMatrix();
+}
+
+void MyDrawDiskPortion(Quaternion q, Vector3 center, float radius, float startTheta, float endTheta, int nSegmentsTheta, Color color) {
+	rlPushMatrix();
+	rlRotatef(q.w * RAD2DEG, q.x, q.y, q.z);
+	rlScalef(radius, radius, radius);
+
+	rlColor4ub(color.r, color.g, color.b, color.a);
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+	for (int i = startTheta; i < endTheta; i++) {
+		Vector3 p1 = SphericalToCartesian(Spherical{
+			1, i * deltaTheta, PI / 2
+			});
+		int y = i + 1;
+		Vector3 p2 = SphericalToCartesian(Spherical{
+			1, y * deltaTheta, PI / 2
+			});
+		rlBegin(RL_TRIANGLES);
+		rlVertex3f(0, center.y, 0);
+		rlVertex3f(p1.x, center.y, p1.z);
+		rlVertex3f(p2.x, center.y, p2.z);
+
+		rlVertex3f(p1.x, center.y, p1.z);
+		rlVertex3f(0, center.y, 0);
+		rlVertex3f(p2.x, center.y, p2.z);
+	}
+
+	rlEnd();
+	rlPopMatrix();
+
+}
+
+
+void MyDrawCylinderPortion(Quaternion q, Cylinder cyl, float startTheta, float endTheta, int nSegmentsTheta, bool drawCaps, Color color) {
+	//on met en place l'espace de modélisation
+	rlPushMatrix();
+
+	rlTranslatef(cyl.pt1.x, cyl.pt1.y, cyl.pt1.z);
+
+	Vector3 height = Vector3Subtract(cyl.pt2, cyl.pt1);
+	float size = Vector3Length(height);
+
+	rlScalef(cyl.radius, size, cyl.radius);
+	float angle;
+	Vector3 vector;
+	QuaternionToAxisAngle(q, &vector, &angle);
+
+
+	rlRotatef(angle * RAD2DEG, vector.x, vector.y, vector.z);
+
+
+
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+
+	//on dessine chaque triangle
+	for (int i = startTheta; i < endTheta; i++) {
+		Vector3 p1 = SphericalToCartesian(Spherical{
+			1, i * deltaTheta, PI / 2
+			});
+		int y = i + 1;
+		Vector3 p2 = SphericalToCartesian(Spherical{
+			1, y * deltaTheta, PI / 2
+			});
+
+
+		//on effectue 2 triangles pour constituer un rectangle
+		// et 2 fois pour chaque coté du cylindre
+		rlBegin(RL_TRIANGLES);
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt2.y, p2.z);
+
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p1.x, cyl.pt1.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+
+		rlVertex3f(p1.x, cyl.pt1.y, p1.z);
+		rlVertex3f(p1.x, cyl.pt2.y, p1.z);
+		rlVertex3f(p2.x, cyl.pt1.y, p2.z);
+
+	}
+	if (drawCaps) {
+		//on rajoute les extrémités si souhaité
+		MyDrawDiskPortion({ 0,0,0,0 }, cyl.pt2, 1, startTheta, endTheta, nSegmentsTheta, color);
+		MyDrawDiskPortion({ 0,0,0,0 }, cyl.pt1, 1, startTheta, endTheta, nSegmentsTheta, color);
+	}
+
+	rlEnd();
+	rlPopMatrix();
+}
+
+void MyDrawSpherePortion(Quaternion q, Sphere sph, float startTheta, float endTheta, float startPhi, float endPhi, int nSegmentsTheta, int nSegmentsPhi, Color color) {
+	if (nSegmentsTheta < 3 || nSegmentsPhi < 2) return;
+
+	std::vector<Vector3> vertexBufferTheta(nSegmentsTheta + 1);
+	std::fill(vertexBufferTheta.begin(), vertexBufferTheta.end(), Vector3{ 0,1,0 });
+
+	int numVertex = nSegmentsTheta * nSegmentsPhi * 6;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+	rlPushMatrix();
+
+	// NOTE: Transformation is applied in inverse order (scale -> translate)
+	rlTranslatef(sph.pos.x, sph.pos.y, sph.pos.z);
+
+	//ROTATION
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	//
+
+	rlScalef(sph.r, sph.r, sph.r);
+
+
+	rlBegin(RL_TRIANGLES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	float deltaPhi = PI / nSegmentsPhi;
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+
+	float phi = 0;
+	for (int i = startPhi; i < endPhi; i++)
+	{
+		float theta = 0;
+		Vector3 tmpBottomLeft = SphericalToCartesian(Spherical{ 1,theta,phi + deltaPhi });
+
+		for (int j = startTheta; j < endTheta; j++)
+		{
+			Vector3 topLeft = vertexBufferTheta[j];
+			Vector3 bottomLeft = tmpBottomLeft;
+			Vector3 topRight = vertexBufferTheta[j + 1];
+			Vector3 bottomRight = SphericalToCartesian(Spherical{ 1,theta + deltaTheta,phi + deltaPhi });
+
+
+			rlVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z);
+			rlVertex3f(topRight.x, topRight.y, topRight.z);
+			rlVertex3f(topLeft.x, topLeft.y, topLeft.z);
+
+			rlVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z);
+			rlVertex3f(bottomRight.x, bottomRight.y, bottomRight.z);
+			rlVertex3f(topRight.x, topRight.y, topRight.z);
+
+			theta += deltaTheta;
+
+			vertexBufferTheta[j] = tmpBottomLeft;
+			tmpBottomLeft = bottomRight;
+		}
+		vertexBufferTheta[vertexBufferTheta.size() - 1] = vertexBufferTheta[0];
+		phi += deltaPhi;
+	}
+	rlEnd();
+	rlPopMatrix();
+}
+
+void MyDrawSphereWiresPortion(Quaternion q, Sphere sph, float startTheta, float endTheta, float startPhi, float endPhi, int nSegmentsTheta, int nSegmentsPhi, Color color) {
+	if (nSegmentsTheta < 3 || nSegmentsPhi < 2) return;
+
+	std::vector<Vector3> vertexBufferTheta(nSegmentsTheta + 1);
+	std::fill(vertexBufferTheta.begin(), vertexBufferTheta.end(), Vector3{ 0,1,0 });
+
+	int numVertex = nSegmentsTheta * nSegmentsPhi * 6;
+	if (rlCheckBufferLimit(numVertex)) rlglDraw();
+
+	rlPushMatrix();
+
+	// NOTE: Transformation is applied in inverse order (scale -> translate)
+	rlTranslatef(sph.pos.x, sph.pos.y, sph.pos.z);
+
+	//ROTATION
+	Vector3 vect;
+	float angle;
+	QuaternionToAxisAngle(q, &vect, &angle);
+	rlRotatef(angle * RAD2DEG, vect.x, vect.y, vect.z);
+	//
+
+	rlScalef(sph.r, sph.r, sph.r);
+
+
+	rlBegin(RL_TRIANGLES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	float deltaPhi = PI / nSegmentsPhi;
+	float deltaTheta = 2 * PI / nSegmentsTheta;
+
+	float phi = 0;
+	for (int i = startPhi; i < endPhi; i++)
+	{
+		float theta = 0;
+		Vector3 tmpBottomLeft = SphericalToCartesian(Spherical{ 1,theta,phi + deltaPhi });
+
+		for (int j = startTheta; j < endTheta; j++)
+		{
+			Vector3 topLeft = vertexBufferTheta[j];
+			Vector3 bottomLeft = tmpBottomLeft;
+			Vector3 topRight = vertexBufferTheta[j + 1];
+			Vector3 bottomRight = SphericalToCartesian(Spherical{ 1,theta + deltaTheta,phi + deltaPhi });
+
+
+			rlBegin(RL_LINES);
+			rlColor4ub(color.r, color.g, color.b, color.a);
+			rlVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z);
+			rlVertex3f(topLeft.x, topLeft.y, topLeft.z);
+
+			rlVertex3f(topLeft.x, topLeft.y, topLeft.z);
+			rlVertex3f(topRight.x, topRight.y, topRight.z); 
+			rlEnd();
+
+			theta += deltaTheta;
+
+			vertexBufferTheta[j] = tmpBottomLeft;
+			tmpBottomLeft = bottomRight;
+		}
+		vertexBufferTheta[vertexBufferTheta.size() - 1] = vertexBufferTheta[0];
+		phi += deltaPhi;
+	}
+	rlEnd();
+	rlPopMatrix();
+}
+
 int main(int argc, char* argv[])
 {
 	// Initialization
@@ -744,13 +1090,21 @@ int main(int argc, char* argv[])
 			DrawSphere({ 10,0,0 }, .2f, RED);
 			DrawSphere({ 0,0,10 }, .2f, BLUE);
 			DrawSphere({ 0,10,0 }, .2f, GREEN);
+
+			
 			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
+			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ time * 10,time * 100,time * 1000 }), time);
+			Sphere sph = { {0,0,0 }, 3 };
+			MyDrawSphereWiresPortion(QuaternionIdentity(), sph, 4, 20, 4, 28, 28, 28, PURPLE);
 
-			//Cylinder cylinder = { {0,0,0}, {0,2,0}, 2.f };
-			//MyDrawCylinder(QuaternionIdentity(), cylinder, 28, true, RED);
-			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ time*10,time*100,time*1000}), time);
+			Cylinder cylinder = { {0,0,0}, {0,2,0}, 2.f };
+			//MyDrawCylinderWire(QuaternionIdentity(), cylinder, 28, true, RED);
+			//MyDrawCylinderPortion(qOrient, cylinder, 4, 25, 28, true, RED);
+			
 
-			MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);
+			//MyDrawSphereWires({ 0,0,0 }, 2, 20, 20, BLUE);
+
+			//MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);
 		}
 		EndMode3D();
 
