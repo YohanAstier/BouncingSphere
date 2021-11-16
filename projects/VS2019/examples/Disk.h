@@ -12,6 +12,7 @@
 void MyDrawDiskWire(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, Color color);
 void MyDrawDiskPortion(Quaternion q, Vector3 center, float radius, float startTheta, float endTheta, int nSegmentsTheta, Color color);
 void MyDrawDisk(Quaternion q, Vector3 center, float radius, int nSegmentsTheta, Color color);
+void MyDrawDiskWiresPortion(Quaternion q, Vector3 center, float radius, float startTheta, float endTheta, int nSegmentsTheta, Color color);
 #endif
 
 
