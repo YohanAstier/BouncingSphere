@@ -323,6 +323,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\examples\core\core_basic_window.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="Disk.cpp" />
+    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="Sphere.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="Disk.h" />
+    <ClInclude Include="Plane.h" />
+    <ClInclude Include="Quad.h" />
+    <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
