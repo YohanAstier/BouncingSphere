@@ -102,14 +102,12 @@ int main(int argc, char* argv[])
 			DrawSphere({ 0,0,10 }, .2f, BLUE);
 			DrawSphere({ 0,10,0 }, .2f, GREEN);
 
-			
 			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
-			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ time * 10,time * 100,time * 1000 }), time);
 			//Sphere sph = { {0,0,0 }, 3 };
 			//MyDrawSphereWiresPortion(QuaternionIdentity(), sph, 4, 20, 4, 28, 28, 28, PURPLE);
 
-			Cylinder cylinder = { {1,0,0}, {1,10,0}, 1.f };
-			MyDrawCylinderPortion(qOrient, cylinder,0,28, 28, true, BROWN);
+			/*Cylinder cylinder = { {1,0,0}, {1,10,0}, 1.f };
+			MyDrawCylinderPortion(qOrient, cylinder,0,28, 28, true, BROWN);*/
 			
 
 			//MyDrawSphereWires({ 0,0,0 }, 2, 20, 20, BLUE);

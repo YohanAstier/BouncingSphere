@@ -7,9 +7,16 @@
 #include <float.h>
 #include <vector>
 #include "../projects/VS2019/examples/Sphere.h"
+#include "../projects/VS2019/examples/Utilities.h"
+#include "../projects/VS2019/examples/Plane.h"
 
+struct Quad {
+	Referencial r;
+	Vector3 extension;
+};
 void MyDrawQuad(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadWire(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadRotative(Quaternion q, Vector3 center, Vector2 size, Color color);
+bool InterSegmentQuad(Segment seg, Quad quad, Vector3* interPt, Vector3* interNormal);
 
 #endif

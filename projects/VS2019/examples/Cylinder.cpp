@@ -76,8 +76,8 @@ void MyDrawCylinder(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCap
 	}
 	if (drawCaps) {
 		//on rajoute les extrémités si souhaité
-		MyDrawDisk({ 0,0,0,0 }, cyl.pt2, 1, nSegmentsTheta, color);
-		MyDrawDisk({ 0,0,0,0 }, cyl.pt1, 1, nSegmentsTheta, color);
+		MyDrawDisk({ 0,0,0,0 }, {0, 1, 0}, 1, nSegmentsTheta, color);
+		MyDrawDisk({ 0,0,0,0 }, {0, 0, 0}, 1, nSegmentsTheta, color);
 	}
 
 	rlEnd();
@@ -144,8 +144,8 @@ void MyDrawCylinderWire(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool dra
 	}
 	if (drawCaps) {
 		//on rajoute les extrémités si souhaité
-		MyDrawDiskWire({ 0,0,0,0 }, cyl.pt2, 1, nSegmentsTheta, color);
-		MyDrawDiskWire({ 0,0,0,0 }, cyl.pt1, 1, nSegmentsTheta, color);
+		MyDrawDiskWire({ 0,0,0,0 }, {0, 1, 0}, 1, nSegmentsTheta, color);
+		MyDrawDiskWire({ 0,0,0,0 }, {0, 0, 0}, 1, nSegmentsTheta, color);
 	}
 
 	rlEnd();
@@ -279,8 +279,8 @@ void MyDrawCylinderWiresPortion(Quaternion q, Cylinder cyl, float startTheta, fl
 	}
 	if (drawCaps) {
 		//on rajoute les extrémités si souhaité
-		MyDrawDiskWiresPortion({ 0,0,0,0 }, cyl.pt2, 1, startTheta, endTheta, nSegmentsTheta, color);
-		MyDrawDiskWiresPortion({ 0,0,0,0 }, cyl.pt1, 1, startTheta, endTheta, nSegmentsTheta, color);
+		MyDrawDiskWiresPortion({ 0,0,0,0 }, {0, 1, 0}, 1, startTheta, endTheta, nSegmentsTheta, color);
+		MyDrawDiskWiresPortion({ 0,0,0,0 }, {0, 0, 0}, 1, startTheta, endTheta, nSegmentsTheta, color);
 	}
 
 	rlEnd();

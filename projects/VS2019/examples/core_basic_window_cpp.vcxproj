@@ -328,6 +328,7 @@
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cylinder.h" />
@@ -335,6 +336,7 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
