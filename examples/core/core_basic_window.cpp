@@ -95,7 +95,8 @@ int main(int argc, char* argv[])
 
 			//3D REFERENTIAL
 			HideCursor();
-			
+			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ 1,3,-4 }), time);
+
 			DrawGrid(20, 1.0f);        // Draw a grid
 			DrawLine3D({ 0 }, { 0,10,0 }, DARKGRAY);
 			DrawSphere({ 10,0,0 }, .2f, RED);
@@ -116,12 +117,27 @@ int main(int argc, char* argv[])
 			Segment s = { {1,-2,1 }, {0, 2, 0} };
 			Referencial r = { {0,0,0}, {1,0,0}, {0,1,0}, {0,0,1}, QuaternionIdentity() };
 			Quad q = { r, {1,0,1} };
-			Vector3* interPt = (Vector3*) malloc(sizeof(Vector3));
-			Vector3* interNormal = (Vector3*)malloc(sizeof(Vector3));
-			InterSegmentQuad(s, q, interPt, interNormal);
+			Vector3 interPt;
+			Vector3 interNormal;
+			r = ReferencialByQuarternion(r, qOrient);
+			q.r = r;
+			bool isTouching = InterSegmentQuad(s, q, &interPt, &interNormal);
+
+
 			DrawLine3D(s.pt1, s.pt2, RED);
-			MyDrawSphereEx2(*interPt, 0.1f, 20, 20, RED);
-			MyDrawQuadRotative(QuaternionIdentity(), q, GREEN);
+
+			if (isTouching) {
+				MyDrawSphereEx2(interPt, .1f, 20, 20, RED);
+				MyDrawQuadRotative(q, GREEN);
+			}
+			else {
+				MyDrawQuadRotative(q, GREEN);
+			}
+			
+
+			
+			
+			
 		}
 		EndMode3D();
 

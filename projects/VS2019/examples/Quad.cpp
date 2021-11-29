@@ -96,17 +96,16 @@ bool InterSegmentQuad(Segment seg, Quad quad, Vector3* interPt, Vector3* interNo
 
 	//Verifie si a l'intérieur du carré
 	Vector3 localPoint = GlobalToLocalPos(*interPt, quad.r);
-	return (0 <= abs(localPoint.x) && abs(localPoint.x) <= quad.r.origin.x + quad.extension.x
-		&& 0 <= abs(localPoint.y) && abs(localPoint.y) <= quad.r.origin.y + quad.extension.y
-		&& 0 <= abs(localPoint.z) && abs(localPoint.z) <= quad.r.origin.z + quad.extension.z);
+	return (abs(localPoint.x) <=  quad.extension.x
+		 && abs(localPoint.z) <= quad.extension.z);
 }
 
-void MyDrawQuadRotative(Quaternion q, Quad quad, Color color) {
+void MyDrawQuadRotative(Quad quad, Color color) {
 	rlPushMatrix();
 
 	float angle;
 	Vector3 vector;
-	QuaternionToAxisAngle(q, &vector, &angle);
+	QuaternionToAxisAngle(quad.r.quat, &vector, &angle);
 	rlRotatef(angle * RAD2DEG, vector.x, vector.y, vector.z);
 
 	rlScalef(quad.extension.x, quad.extension.y, quad.extension.z);
