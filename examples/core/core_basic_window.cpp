@@ -113,12 +113,15 @@ int main(int argc, char* argv[])
 			//MyDrawSphereWires({ 0,0,0 }, 2, 20, 20, BLUE);
 
 			//MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);4
-			Segment s = { {0.5,-2,0 }, {0.5, 2, 0} };
+			Segment s = { {1,-2,1 }, {0, 2, 0} };
 			Referencial r = { {0,0,0}, {1,0,0}, {0,1,0}, {0,0,1}, QuaternionIdentity() };
 			Quad q = { r, {1,0,1} };
 			Vector3* interPt = (Vector3*) malloc(sizeof(Vector3));
 			Vector3* interNormal = (Vector3*)malloc(sizeof(Vector3));
-			printf("%d", InterSegmentQuad(s, q, interPt, interNormal));
+			InterSegmentQuad(s, q, interPt, interNormal);
+			DrawLine3D(s.pt1, s.pt2, RED);
+			MyDrawSphereEx2(*interPt, 0.1f, 20, 20, RED);
+			MyDrawQuadRotative(QuaternionIdentity(), q, GREEN);
 		}
 		EndMode3D();
 

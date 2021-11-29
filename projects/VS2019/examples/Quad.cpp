@@ -95,9 +95,48 @@ bool InterSegmentQuad(Segment seg, Quad quad, Vector3* interPt, Vector3* interNo
 	if (!InterSegPlane(seg, p, interPt, interNormal)) return false;
 
 	//Verifie si a l'intérieur du carré
-	/*Vector3 localPoint = GlobalToLocalPos(*interPt, quad.r);
-	return (0 <= localPoint.x && interPt->x <= 1
-		&& 0 <= localPoint.y && interPt->y <=
-		&& 0 <= localPoint.z && interPt->z <= );*/
+	Vector3 localPoint = GlobalToLocalPos(*interPt, quad.r);
+	return (0 <= abs(localPoint.x) && abs(localPoint.x) <= quad.r.origin.x + quad.extension.x
+		&& 0 <= abs(localPoint.y) && abs(localPoint.y) <= quad.r.origin.y + quad.extension.y
+		&& 0 <= abs(localPoint.z) && abs(localPoint.z) <= quad.r.origin.z + quad.extension.z);
 }
 
+void MyDrawQuadRotative(Quaternion q, Quad quad, Color color) {
+	rlPushMatrix();
+
+	float angle;
+	Vector3 vector;
+	QuaternionToAxisAngle(q, &vector, &angle);
+	rlRotatef(angle * RAD2DEG, vector.x, vector.y, vector.z);
+
+	rlScalef(quad.extension.x, quad.extension.y, quad.extension.z);
+	rlTranslatef(quad.r.origin.x, quad.r.origin.y, quad.r.origin.z);
+
+
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	rlBegin(RL_TRIANGLES);
+
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(0, 0, 1);
+	rlVertex3f(1, 0, 1);
+
+	//triangle 2
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(1, 0, 1);
+	rlVertex3f(0, 0, 1);
+
+	//triangle 3
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(1, 0, 0);
+	rlVertex3f(1, 0, 1);
+
+	//triangle 4
+	rlVertex3f(0, 0, 0);
+	rlVertex3f(1, 0, 1);
+	rlVertex3f(1, 0, 0);
+
+
+	rlEnd();
+	rlPopMatrix();
+}
