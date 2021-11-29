@@ -89,14 +89,15 @@ void MyDrawQuadRotative(Quaternion q, Vector3 center, Vector2 size, Color color)
 
 bool InterSegmentQuad(Segment seg, Quad quad, Vector3* interPt, Vector3* interNormal) {
 	Plane p;
-	p.d = Vector3Length(Vector3Subtract({ 0,0,0 }, quad.r.origin));
+
+	p.d = Vector3DotProduct(quad.r.origin, quad.r.j);
 	p.normal = quad.r.j;
 	if (!InterSegPlane(seg, p, interPt, interNormal)) return false;
 
 	//Verifie si a l'intérieur du carré
-	Vector3 localPoint = GlobalToLocalPos(*interPt, quad.r);
-
-
-
+	/*Vector3 localPoint = GlobalToLocalPos(*interPt, quad.r);
+	return (0 <= localPoint.x && interPt->x <= 1
+		&& 0 <= localPoint.y && interPt->y <=
+		&& 0 <= localPoint.z && interPt->z <= );*/
 }
 

@@ -105,14 +105,20 @@ int main(int argc, char* argv[])
 			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
 			//Sphere sph = { {0,0,0 }, 3 };
 			//MyDrawSphereWiresPortion(QuaternionIdentity(), sph, 4, 20, 4, 28, 28, 28, PURPLE);
-
+			
 			/*Cylinder cylinder = { {1,0,0}, {1,10,0}, 1.f };
 			MyDrawCylinderPortion(qOrient, cylinder,0,28, 28, true, BROWN);*/
 			
 
 			//MyDrawSphereWires({ 0,0,0 }, 2, 20, 20, BLUE);
 
-			//MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);
+			//MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);4
+			Segment s = { {0.5,-2,0 }, {0.5, 2, 0} };
+			Referencial r = { {0,0,0}, {1,0,0}, {0,1,0}, {0,0,1}, QuaternionIdentity() };
+			Quad q = { r, {1,0,1} };
+			Vector3* interPt = (Vector3*) malloc(sizeof(Vector3));
+			Vector3* interNormal = (Vector3*)malloc(sizeof(Vector3));
+			printf("%d", InterSegmentQuad(s, q, interPt, interNormal));
 		}
 		EndMode3D();
 
