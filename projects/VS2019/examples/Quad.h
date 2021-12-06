@@ -19,5 +19,6 @@ void MyDrawQuadWire(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadRotative(Quaternion q, Vector3 center, Vector2 size, Color color);
 bool InterSegmentQuad(Segment seg, Quad quad, Vector3* interPt, Vector3* interNormal);
 void MyDrawQuadRotative(Quad quad, Color color);
+void MyDrawBox();
 
 #endif

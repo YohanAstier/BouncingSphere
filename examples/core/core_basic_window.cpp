@@ -30,6 +30,7 @@
 #include "../projects/VS2019/examples/Cylinder.h"
 #include "../projects/VS2019/examples/Quad.h"
 #include "../projects/VS2019/examples/Plane.h"
+#include "../../projects/VS2019/examples/Utilities.h"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
@@ -114,6 +115,11 @@ int main(int argc, char* argv[])
 			//MyDrawSphereWires({ 0,0,0 }, 2, 20, 20, BLUE);
 
 			//MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);4
+			
+			
+			
+			/*
+			Test interSegQuad
 			Segment s = { {1,-2,1 }, {0, 2, 0} };
 			Referencial r = { {0,0,0}, {1,0,0}, {0,1,0}, {0,0,1}, QuaternionIdentity() };
 			Quad q = { r, {1,0,1} };
@@ -121,21 +127,24 @@ int main(int argc, char* argv[])
 			Vector3 interNormal;
 			r = ReferencialByQuarternion(r, qOrient);
 			q.r = r;
-			bool isTouching = InterSegmentQuad(s, q, &interPt, &interNormal);
+
+			bool b = InterSegmentQuad(s, q, &interPt, &interNormal);
 
 
 			DrawLine3D(s.pt1, s.pt2, RED);
 
-			if (isTouching) {
-				MyDrawSphereEx2(interPt, .1f, 20, 20, RED);
-				MyDrawQuadRotative(q, GREEN);
-			}
-			else {
-				MyDrawQuadRotative(q, GREEN);
-			}
-			
+			MyDrawSphereEx2(interPt, .1f, 20, 20, RED);
+			MyDrawQuadRotative(q, GREEN);
+			*/
 
-			
+			Cylinder c = { {0, -1, 0}, {0, 1, 0}, 1 };
+			MyDrawCylinder(QuaternionIdentity(), c, 20, true, RED);
+			Segment s = { {23,-2,0 }, {23, 2, 0} };
+			DrawLine3D(s.pt1, s.pt2, BLUE);
+			Vector3 interPt;
+			Vector3 interNormal;
+			bool test = InterSegmentInfiniteCylinder(s, c, &interPt, &interNormal);
+			printf("%d \n", test);
 			
 			
 		}

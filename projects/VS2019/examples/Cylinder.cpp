@@ -283,7 +283,35 @@ void MyDrawCylinderWiresPortion(Quaternion q, Cylinder cyl, float startTheta, fl
 		MyDrawDiskWiresPortion({ 0,0,0,0 }, {0, 0, 0}, 1, startTheta, endTheta, nSegmentsTheta, color);
 	}
 
+
+
 	rlEnd();
 	rlPopMatrix();
 
+}
+
+bool InterSegmentInfiniteCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* interNormal) {
+	Vector3 AB = Vector3Subtract(seg.pt2, seg.pt1);
+	Vector3 PQ = Vector3Subtract(cyl.pt2, cyl.pt1);
+	Vector3 PA = Vector3Subtract(seg.pt1, cyl.pt1);
+	Vector3 fact1 = Vector3Scale(PQ,(Vector3DotProduct(AB, PQ)/ Vector3DotProduct(PQ,PQ)));
+	Vector3 i =	Vector3Subtract(AB,fact1);
+	float a = Vector3DotProduct(i, i);
+	Vector3 fact2 = Vector3Scale(PQ, (Vector3DotProduct(PA, PQ) / Vector3DotProduct(PQ, PQ)));
+	Vector3 j = Vector3Subtract(PA, fact2);
+	float b = Vector3DotProduct(i, j) * 2;
+	float c = Vector3DotProduct(j, j) - pow(cyl.radius, 2);
+	float delta = pow(b, 2) - 4*a*c;
+	
+	if (delta < 0)
+	{
+		return false;
+	}
+	float ax = (-b + sqrt(delta)) / 2 * a;
+	float bx = (-b - sqrt(delta)) / 2 * a;
+	float x = ax > bx ? bx : ax;
+
+	*interPt = Vector3Add(seg.pt1, Vector3Scale(AB, x));
+
+	return true;
 }
