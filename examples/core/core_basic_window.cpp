@@ -139,12 +139,15 @@ int main(int argc, char* argv[])
 
 			Cylinder c = { {0, -1, 0}, {0, 1, 0}, 1 };
 			MyDrawCylinder(QuaternionIdentity(), c, 20, true, RED);
-			Segment s = { {23,-2,0 }, {23, 2, 0} };
+			Segment s = { {10,0,0 }, {-10, 0, 0} };
 			DrawLine3D(s.pt1, s.pt2, BLUE);
 			Vector3 interPt;
 			Vector3 interNormal;
 			bool test = InterSegmentInfiniteCylinder(s, c, &interPt, &interNormal);
 			printf("%d \n", test);
+			if (test) {
+				DrawSphere(interPt, .2f , GREEN);
+			}
 			
 			
 		}
