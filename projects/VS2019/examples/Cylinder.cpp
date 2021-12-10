@@ -321,8 +321,15 @@ bool InterSegmentInfiniteCylinder(Segment seg, Cylinder cyl, Vector3* interPt, V
 
 	*interPt = Vector3Add(seg.pt1, Vector3Scale(AB, x));
 	*interNormal = Vector3Negate(AB);
-
+	
 	return true;
 
 	
+}
+
+bool InterSegmentInfiniteCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* interNormal) {
+	if (!InterSegmentInfiniteCylinder(seg, cyl, interPt, interNormal)) return false;
+
+	//Verifier si la distance du point au cylindre est inférieure au rayon
+
 }

@@ -34,6 +34,8 @@ void MyDrawCylinderPortion(Quaternion q, Cylinder cyl, float startTheta, float e
 void MyDrawCylinderWire(Quaternion q, Cylinder cyl, int nSegmentsTheta, bool drawCaps, Color color);
 void MyDrawCylinderWiresPortion(Quaternion q, Cylinder cyl, float startTheta, float endTheta, int nSegmentsTheta, bool drawCaps, Color color);
 bool InterSegmentInfiniteCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* interNormal);
+bool InterSegmentCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* interNormal);
+
 #endif
 
 
