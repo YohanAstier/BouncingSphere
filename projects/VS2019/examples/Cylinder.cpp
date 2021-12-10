@@ -332,4 +332,5 @@ bool InterSegmentInfiniteCylinder(Segment seg, Cylinder cyl, Vector3* interPt, V
 
 	//Verifier si la distance du point au cylindre est inférieure au rayon
 
+
 }
