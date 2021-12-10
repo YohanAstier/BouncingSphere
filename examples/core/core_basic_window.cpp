@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
 			DrawLine3D(s.pt1, s.pt2, BLUE);
 			Vector3 interPt;
 			Vector3 interNormal;
-			bool test = InterSegmentInfiniteCylinder(s, c, &interPt, &interNormal);
+			bool test = InterSegmentCylinder(s, c, &interPt, &interNormal);
 			printf("%d \n", test);
 			if (test) {
 				DrawSphere(interPt, .2f , GREEN);
