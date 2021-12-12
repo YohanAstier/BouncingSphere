@@ -30,6 +30,7 @@
 #include "../projects/VS2019/examples/Cylinder.h"
 #include "../projects/VS2019/examples/Quad.h"
 #include "../projects/VS2019/examples/Plane.h"
+#include "../projects/VS2019/examples/Ball.h"
 #include "../../projects/VS2019/examples/Utilities.h"
 
 #if defined(PLATFORM_DESKTOP)
@@ -37,6 +38,8 @@
 #else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
 #define GLSL_VERSION            100
 #endif
+
+#define RADIUS					.5f
 
 template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
@@ -70,6 +73,9 @@ int main(int argc, char* argv[])
 	printf("cyl = (%f,%f,%f) ", cyl.rho, cyl.theta, cyl.y);
 	cyl = cyl + cyl;
 	printf("cyl = (%f,%f,%f) ", cyl.rho, cyl.theta, cyl.y);
+
+	//init the ball
+	Ball b = initBall({ 0,10,0 }, RADIUS);
 
 	// Main game loop
 	while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -168,7 +174,11 @@ int main(int argc, char* argv[])
 			if (test) {
 				DrawSphere(interPt, .1f , GREEN);
 			}*/
-			 Quaternion quat = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,0 }), PI / 2);
+
+
+			/*
+			TEST BOX
+			Quaternion quat = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,0 }), PI / 2);
 			Vector3 origin = { 0,0,0 };
 			Vector3 extension = { 2,0,2 };
 			Referencial r = { origin,
@@ -185,7 +195,11 @@ int main(int argc, char* argv[])
 				else {
 					MyDrawQuadRotative(b.faces[i], GREEN);
 				}
-			}
+			}*/
+
+			
+			MyDrawSphereEx2(b.s.pos, b.s.r, 24, 24, BLUE);
+			b = moveBall(b);
 			
 		}
 		EndMode3D();

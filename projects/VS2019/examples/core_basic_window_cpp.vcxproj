@@ -323,6 +323,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\examples\core\core_basic_window.cpp" />
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Disk.cpp" />
     <ClCompile Include="Plane.cpp" />
@@ -331,6 +332,7 @@
     <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Disk.h" />
     <ClInclude Include="Plane.h" />
