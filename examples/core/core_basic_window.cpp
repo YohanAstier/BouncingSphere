@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 
 			//3D REFERENTIAL
 			HideCursor();
-			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ 1,3,-4 }), time);
+			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ 1,3,-4}), time);
 
 			DrawGrid(20, 1.0f);        // Draw a grid
 			DrawLine3D({ 0 }, { 0,10,0 }, DARKGRAY);
@@ -118,37 +118,74 @@ int main(int argc, char* argv[])
 			
 			
 			
-			/*
-			Test interSegQuad
-			Segment s = { {1,-2,1 }, {0, 2, 0} };
-			Referencial r = { {0,0,0}, {1,0,0}, {0,1,0}, {0,0,1}, QuaternionIdentity() };
-			Quad q = { r, {1,0,1} };
-			Vector3 interPt;
-			Vector3 interNormal;
-			r = ReferencialByQuarternion(r, qOrient);
-			q.r = r;
+			
+			//Test Box;
+			//Quaternion quat = QuaternionIdentity();
+			//Referencial r = { {0,0,0}, {2,0,0}, {0,2,0}, {0,0,2}, QuaternionIdentity() };
+			//r = ReferencialByQuarternion(r, quat);
+			//Quad q = { r, {2,0,2} };
 
-			bool b = InterSegmentQuad(s, q, &interPt, &interNormal);
+			//Quaternion quat2 = QuaternionFromAxisAngle(Vector3Normalize({ -1,0,0 }), PI / 2);
+			//Referencial r2 = ReferencialByQuarternion(r, quat2);
+			//Quad q2 = { r2, {2,0,2} };
 
+			//Quaternion quat3 = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2);
+			//Referencial r3 = ReferencialByQuarternion(r, quat3);
+			//Quad q3 = { r3, {2,0,2} };
 
-			DrawLine3D(s.pt1, s.pt2, RED);
+			//
+			//Quaternion quat4 = QuaternionIdentity();
+			//Referencial r4 = { {0,2,0}, {2,2,0}, {0,4,0}, {0,2,4}, QuaternionIdentity()};
+			//r4 = ReferencialByQuarternion(r4, quat4);
+			//Quad q4 = { r4, {2,0,2} };
 
-			MyDrawSphereEx2(interPt, .1f, 20, 20, RED);
-			MyDrawQuadRotative(q, GREEN);
-			*/
+			//Quaternion quat5 = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,1 }), PI / 2);
+			//Referencial r5 = { {2,0,0}, {4,0,0}, {2,2,0}, {2,0,2}, quat5 };
+			//Quad q5 = { r5, {2,0,2} };
 
-			Cylinder c = { {0, -1, 0}, {0, 1, 0}, 1 };
+			//Quaternion quat6 = QuaternionFromAxisAngle(Vector3Normalize({ -1,0,0 }), PI / 2);
+			//Referencial r6 = { {0,0,2}, {2,0,2}, {0,2,2}, {0,0,4}, quat6 };
+			//Quad q6 = { r6, {2,0,2} };
+
+			//MyDrawQuadRotative(q, RED);
+			//MyDrawQuadRotative(q2, GREEN);
+			//MyDrawQuadRotative(q3, GREEN);
+
+			//MyDrawQuadRotative(q4, RED);
+			//MyDrawQuadRotative(q5, GREEN);
+			//MyDrawQuadRotative(q6, GREEN);
+
+		
+
+			/*Cylinder c = { {0, -1, 0}, {0, 1, 0}, 1 };
 			MyDrawCylinder(QuaternionIdentity(), c, 20, true, RED);
-			Segment s = { {10,0,0 }, {-10, 0, 0} };
+			Segment s = { {0,-5,0 }, {0, 5, 0} };
 			DrawLine3D(s.pt1, s.pt2, BLUE);
 			Vector3 interPt;
 			Vector3 interNormal;
 			bool test = InterSegmentCylinder(s, c, &interPt, &interNormal);
 			printf("%d \n", test);
 			if (test) {
-				DrawSphere(interPt, .2f , GREEN);
+				DrawSphere(interPt, .1f , GREEN);
+			}*/
+			 Quaternion quat = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,0 }), PI / 2);
+			Vector3 origin = { 0,0,0 };
+			Vector3 extension = { 2,0,2 };
+			Referencial r = { origin,
+				{extension.x + origin.x,origin.y,origin.z},
+				{origin.x,extension.x,origin.z},
+				{origin.x,origin.y,origin.z + extension.z}, QuaternionIdentity() };
+			r = ReferencialByQuarternion(r,quat);
+			Box b = CreateBox(r, extension);
+			for (int i = 0; i < 3; i++) {
+				b.faces[i].r = ReferencialByQuarternion(b.faces[i].r,qOrient);
+				if (i % 3) {
+					MyDrawQuadRotative(b.faces[i], RED);
+				}
+				else {
+					MyDrawQuadRotative(b.faces[i], GREEN);
+				}
 			}
-			
 			
 		}
 		EndMode3D();

@@ -14,11 +14,19 @@ struct Quad {
 	Referencial r;
 	Vector3 extension;
 };
+
+struct Box {
+	Referencial r;
+	Vector3 extension;
+	Quad* faces;
+};
+
 void MyDrawQuad(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadWire(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadRotative(Quaternion q, Vector3 center, Vector2 size, Color color);
 bool InterSegmentQuad(Segment seg, Quad quad, Vector3* interPt, Vector3* interNormal);
 void MyDrawQuadRotative(Quad quad, Color color);
-void MyDrawBox();
+void MyDrawBox(Box box);
+Box CreateBox(Referencial r, Vector3 extension);
 
 #endif

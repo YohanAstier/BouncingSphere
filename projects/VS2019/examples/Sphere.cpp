@@ -276,8 +276,8 @@ bool InterSegmentSphere(Segment seg, Sphere s, Vector3* interPt) {
 		x = -b / 2 * a;
 	}
 	else {
-		double ax = (-b + sqrt(delt)) / 2 * a;
-		double bx = (-b - sqrt(delt)) / 2 * a;
+		double ax = (-b + sqrt(delt)) / (2 * a);
+		double bx = (-b - sqrt(delt)) / (2 * a);
 		x = ax > bx ? bx : ax;
 	}
 	*interPt = Vector3Add(seg.pt1, Vector3Scale(AB, x));

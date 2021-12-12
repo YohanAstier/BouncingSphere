@@ -290,27 +290,34 @@ void MyDrawCylinderWiresPortion(Quaternion q, Cylinder cyl, float startTheta, fl
 
 }
 
+bool isPointOnSeg(Segment s, Vector3 p) {
+	Vector3 ap = Vector3Subtract(p, s.pt1);
+	Vector3 bp = Vector3Subtract(p, s.pt2);
+	Vector3 ab = Vector3Subtract(s.pt2, s.pt1);
+	return Vector3DotProduct(ab, ap) >= 0 && Vector3DotProduct(Vector3Negate(ab), bp) >= 0;
+}
+
 bool InterSegmentInfiniteCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* interNormal) {
 	Vector3 AB = Vector3Subtract(seg.pt2, seg.pt1);
 	Vector3 PQ = Vector3Subtract(cyl.pt2, cyl.pt1);
 	Vector3 PA = Vector3Subtract(seg.pt1, cyl.pt1);
 
-	
+
 	/*if ((AB.x == 0 && AB.y == 0) || PQ.x / AB.x == PQ.y / AB.y) {
 		if (AB.z == 0 || PQ.x / AB.x == PQ.z / AB.z) {
 			return false;
 		}
 	}*/
 
-	Vector3 fact1 = Vector3Scale(PQ,(Vector3DotProduct(PQ, AB)/ Vector3DotProduct(PQ,PQ)));
-	Vector3 i =	Vector3Subtract(AB,fact1);
+	Vector3 fact1 = Vector3Scale(PQ, (Vector3DotProduct(PQ, AB) / Vector3DotProduct(PQ, PQ)));
+	Vector3 i = Vector3Subtract(AB, fact1);
 	float a = Vector3DotProduct(i, i);
 	Vector3 fact2 = Vector3Scale(PQ, (Vector3DotProduct(PQ, PA) / Vector3DotProduct(PQ, PQ)));
 	Vector3 j = Vector3Subtract(PA, fact2);
 	float b = Vector3DotProduct(i, j) * 2;
-	float c = Vector3DotProduct(j, j) - (cyl.radius*cyl.radius);
-	float delta = b*b - 4*a*c;
-	
+	float c = Vector3DotProduct(j, j) - (cyl.radius * cyl.radius);
+	float delta = b * b - 4 * a * c;
+
 	if (delta < 0)
 	{
 		return false;
@@ -320,11 +327,13 @@ bool InterSegmentInfiniteCylinder(Segment seg, Cylinder cyl, Vector3* interPt, V
 	float x = ax > bx ? bx : ax;
 
 	*interPt = Vector3Add(seg.pt1, Vector3Scale(AB, x));
+	if (!isPointOnSeg(seg, *interPt)) return false;
+
 	*interNormal = Vector3Negate(AB);
-	
+
 	return true;
 
-	
+
 }
 
 bool InterSegmentCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* interNormal){
@@ -334,5 +343,14 @@ bool InterSegmentCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* 
 
 	//Verifier si la distance du point au cylindre est inférieure au rayon
 
+
+}
+
+bool InterSegmentCapCylinder(Segment seg, Cylinder cyl, Vector3* interPt, Vector3* interNormal) {
+	//même que pour interSegCylinder on verif juste les cap en plus
+	Sphere sph1 = { cyl.pt1, cyl.radius };
+	Sphere sph2 = { cyl.pt2, cyl.radius };
+	if (InterSegmentCylinder(seg, cyl, interPt, interNormal)) return true;
+	return InterSegmentSphere(seg, sph1, interPt) || InterSegmentSphere(seg, sph2, interPt);
 
 }
