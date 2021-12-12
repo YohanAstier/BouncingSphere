@@ -199,6 +199,8 @@ int main(int argc, char* argv[])
 
 			
 			MyDrawSphereEx2(b.s.pos, b.s.r, 24, 24, BLUE);
+			fall(&b, GetTime() - time);
+			time = GetTime();
 			b = moveBall(b);
 			
 		}

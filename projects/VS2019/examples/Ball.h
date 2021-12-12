@@ -14,6 +14,7 @@ Ball initBall(Vector3 pos, float radius);
 Ball moveBall(Ball b);
 Vector3 nextPos(Ball b);
 
+void fall(Ball* b, float deltaTime);
 #endif
 
 
