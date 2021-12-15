@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 	Camera camera = { 0 };
 	camera.position = cameraPos;
 	camera.target = { 0.0f, 0.0f, 0.0f };
-	camera.up = { 0.0f, 1.0f, 0.0f };
+	camera.up = { 0.0f, 10.0f, 0.0f };
 	camera.fovy = 45.f;
 	camera.type = CAMERA_PERSPECTIVE;
 	SetCameraMode(camera, CAMERA_CUSTOM);  // Set an orbital camera mode
@@ -104,11 +104,11 @@ int main(int argc, char* argv[])
 			HideCursor();
 			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ 1,-3,-4}), time);
 
-			DrawGrid(20, 1.0f);        // Draw a grid
-			DrawLine3D({ 0 }, { 0,10,0 }, DARKGRAY);
-			DrawSphere({ 10,0,0 }, .2f, RED);
-			DrawSphere({ 0,0,10 }, .2f, BLUE);
-			DrawSphere({ 0,10,0 }, .2f, GREEN);
+			//DrawGrid(20, 1.0f);        // Draw a grid
+			//DrawLine3D({ 0 }, { 0,10,0 }, DARKGRAY);
+			//DrawSphere({ 10,0,0 }, .2f, RED);
+			//DrawSphere({ 0,0,10 }, .2f, BLUE);
+			//DrawSphere({ 0,10,0 }, .2f, GREEN);
 
 			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
 			//Sphere sph = { {0,0,0 }, 3 };
@@ -145,24 +145,183 @@ int main(int argc, char* argv[])
 			//Segment s = { {-10,0.5,1.5 }, {10, 0.5, 1.5} };
 			//DrawLine3D(s.pt1, s.pt2, BLUE);
 
-			Quaternion quat = QuaternionFromAxisAngle(Vector3Normalize({ -1,0,0 }), PI / 2);
-			Vector3 origin = { 2,4,2};
-			Vector3 extension = { 2,4,2 };
+			// Terrain
+			// Sol
+			Quaternion quat = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,-1 }), PI / 2);
+			Vector3 origin = { 0,0,0 };
+			Vector3 extension = { 0.2,10,10 };
 			Referential r = { origin,
 				{1,0,0},
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()};
-			//r = ReferentialByQuarternion(r, quat);
-			Box b = CreateBox(r, extension);
-			MyDrawBox(b,GOLD);
+			Referential rGround = ReferentialByQuarternion(r, quat);
+			Box bGround = CreateBox(rGround, extension);
+			MyDrawBox(bGround,LIME);
+
+			// Mur devant
+			origin = { 0,5,10+0.2 };
+			extension = { 10,5,0.2 };
+			Referential rForward = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity() 
+			};
+			Box bForward = CreateBox(rForward, extension);
+			MyDrawBox(bForward, LIGHTGRAY);
+
+			// Mur derrière
+			origin = { 0,5,-10 - 0.2 };
+			extension = { 10,5,0.2 };
+			Referential rBehind = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box bBehind = CreateBox(rBehind, extension);
+			MyDrawBox(bBehind, LIGHTGRAY);
+
+			// Mur gauche
+			origin = { -10-0.2, 5, 0 };
+			extension = { 0.2,5,10 };
+			Referential rLeft = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box bLeft = CreateBox(rLeft, extension);
+			MyDrawBox(bLeft, LIGHTGRAY);
+
+			// Mur droit
+			origin = { 10 + 0.2, 5, 0 };
+			extension = { 0.2,5,10 };
+			Referential rRight = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box bRight = CreateBox(rRight, extension);
+			MyDrawBox(bRight, LIGHTGRAY);
+
+			//----------------------
+			// Box dans le terrain
+			
+
+			origin = { 1, 1, 2 };
+			extension = { 1,1,2 };
+			Referential r1 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b1 = CreateBox(r1, extension);
+			MyDrawBox(b1, RED);
+
+
+			origin = { -5, 0.5, 2 };
+			extension = { 2,0.5,1 };
+			Referential r2 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b2 = CreateBox(r2, extension);
+			MyDrawBox(b2, GOLD);
+
+
+			origin = { -5, 2, -5 };
+			extension = { 1,2,3 };
+			Referential r3 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b3 = CreateBox(r3, extension);
+			MyDrawBox(b3, PURPLE);
+
+			origin = { -5, 1, 8 };
+			extension = { 1,1,2 };
+			Referential r4 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b4 = CreateBox(r4, extension);
+			MyDrawBox(b4, YELLOW);
+
+			origin = { 5, 1, -8 };
+			extension = { 2, 1, 1.5};
+			Referential r5 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b5 = CreateBox(r5, extension);
+			MyDrawBox(b5, BLUE);
+
+			origin = { 0, 0.5, -6 };
+			extension = { 1, 0.5, 2 };
+			Referential r6 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b6 = CreateBox(r6, extension);
+			MyDrawBox(b6, DARKBLUE);
+
+
+			origin = { 6, 1, 6 };
+			extension = { 1.5, 1, 3 };
+			Referential r7 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b7 = CreateBox(r7, extension);
+			MyDrawBox(b7, DARKBLUE);
+
+			origin = { 0, 0.5, 8 };
+			extension = { 2, 0.5, 1 };
+			Referential r8 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b8 = CreateBox(r8, extension);
+			MyDrawBox(b8, MAROON);
+
+			origin = { 5, 0.5, -2 };
+			extension = { 2, 0.5, 1 };
+			Referential r9 = {
+				origin,
+				{1,0,0},
+				{0,1,0},
+				{0,0,1}, QuaternionIdentity()
+			};
+			Box b9 = CreateBox(r9, extension);
+			MyDrawBox(b9, GREEN);
+
+			//----------------------------
+			
 			//InterSegmentQuad(s,b.faces[3],&interPt,&interNormal);
 
 			//DrawSphere(interPt, .1f, GREEN);
 			
-			MyDrawSphereEx2(b.s.pos, b.s.r, 24, 24, BLUE);
-			fall(&b, GetTime() - time);
-			time = GetTime();
-			b = moveBall(b);
+			//MyDrawSphereEx2(b.s.pos, b.s.r, 24, 24, BLUE);
+			//fall(&b, GetTime() - time);
+			//time = GetTime();
+			//b = moveBall(b);
 			
 		}
 		EndMode3D();
