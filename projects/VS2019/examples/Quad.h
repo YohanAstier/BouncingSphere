@@ -15,11 +15,11 @@ struct Quad {
 	Vector3 extension;
 };
 
-struct Box {
+typedef struct Box {
 	Referential r;
 	Vector3 extension;
 	Quad faces[6];
-};
+} Box;
 
 void MyDrawQuad(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadWire(Vector3 center, Vector2 size, Color color);

@@ -109,42 +109,9 @@ int main(int argc, char* argv[])
 			//DrawSphere({ 10,0,0 }, .2f, RED);
 			//DrawSphere({ 0,0,10 }, .2f, BLUE);
 			//DrawSphere({ 0,10,0 }, .2f, GREEN);
-
-			//MyDrawDisk({ 0,0,0,0 }, { 0,0,0 }, 5, 20, BLUE)
-			//Sphere sph = { {0,0,0 }, 3 };
-			//MyDrawSphereWiresPortion(QuaternionIdentity(), sph, 4, 20, 4, 28, 28, 28, PURPLE);
 			
-			/*Cylinder cylinder = { {1,0,0}, {1,10,0}, 1.f };
-			MyDrawCylinderPortion(qOrient, cylinder,0,28, 28, true, BROWN);*/
-			
-
-			//MyDrawSphereWires({ 0,0,0 }, 2, 20, 20, BLUE);
-
-			//MyDrawDiskWire(qOrient, { 0,1,0 }, 5, 20, BLUE);4
-			
-			
-			
-
-
-			/*Cylinder c = { {0, -1, 0}, {0, 1, 0}, 1 };
-			MyDrawCylinder(QuaternionIdentity(), c, 20, true, RED);
-			Segment s = { {0,-5,0 }, {0, 5, 0} };
-			DrawLine3D(s.pt1, s.pt2, BLUE);*/
-			Vector3 interPt;
-			Vector3 interNormal;
-
-			/*bool test = InterSegmentCylinder(s, c, &interPt, &interNormal);
-			printf("%d \n", test);
-			if (test) {
-				DrawSphere(interPt, .1f , GREEN);
-			}*/
-
-
-			
-			//TEST BOX
-			//Segment s = { {-10,0.5,1.5 }, {10, 0.5, 1.5} };
-			//DrawLine3D(s.pt1, s.pt2, BLUE);
-
+			/////// INITIALISATION DU TERRAIN
+			std::vector<Box> boxVector;
 			// Terrain
 			// Sol
 			Quaternion quat = QuaternionFromAxisAngle(Vector3Normalize({ 0,0,-1 }), PI / 2);
@@ -157,6 +124,7 @@ int main(int argc, char* argv[])
 			Referential rGround = ReferentialByQuarternion(r, quat);
 			Box bGround = CreateBox(rGround, extension);
 			MyDrawBox(bGround,LIME);
+			boxVector.push_back(bGround);
 
 			// Mur devant
 			origin = { 0,5,10+0.2 };
@@ -169,6 +137,7 @@ int main(int argc, char* argv[])
 			};
 			Box bForward = CreateBox(rForward, extension);
 			MyDrawBox(bForward, LIGHTGRAY);
+			boxVector.push_back(bForward);
 
 			// Mur derrière
 			origin = { 0,5,-10 - 0.2 };
@@ -181,6 +150,7 @@ int main(int argc, char* argv[])
 			};
 			Box bBehind = CreateBox(rBehind, extension);
 			MyDrawBox(bBehind, LIGHTGRAY);
+			boxVector.push_back(bBehind);
 
 			// Mur gauche
 			origin = { -10-0.2, 5, 0 };
@@ -193,7 +163,7 @@ int main(int argc, char* argv[])
 			};
 			Box bLeft = CreateBox(rLeft, extension);
 			MyDrawBox(bLeft, LIGHTGRAY);
-
+			boxVector.push_back(bLeft);
 			// Mur droit
 			origin = { 10 + 0.2, 5, 0 };
 			extension = { 0.2,5,10 };
@@ -205,6 +175,7 @@ int main(int argc, char* argv[])
 			};
 			Box bRight = CreateBox(rRight, extension);
 			MyDrawBox(bRight, LIGHTGRAY);
+			boxVector.push_back(bRight);
 
 			//----------------------
 			// Box dans le terrain
@@ -218,8 +189,11 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r1 = ReferentialByQuarternion(r1, QuaternionFromAxisAngle({ -1,-1,1 }, PI / 2));
 			Box b1 = CreateBox(r1, extension);
+
 			MyDrawBox(b1, RED);
+			boxVector.push_back(b1);
 
 
 			origin = { -5, 0.5, 2 };
@@ -230,8 +204,10 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r2 = ReferentialByQuarternion(r2, QuaternionFromAxisAngle({ 1,1,0 }, PI / 2));
 			Box b2 = CreateBox(r2, extension);
 			MyDrawBox(b2, GOLD);
+			boxVector.push_back(b2);
 
 
 			origin = { -5, 2, -5 };
@@ -242,8 +218,10 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r3 = ReferentialByQuarternion(r3, QuaternionFromAxisAngle({ 1,-1,1 }, PI / 2));
 			Box b3 = CreateBox(r3, extension);
 			MyDrawBox(b3, PURPLE);
+			boxVector.push_back(b3);
 
 			origin = { -5, 1, 8 };
 			extension = { 1,1,2 };
@@ -253,8 +231,10 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r4 = ReferentialByQuarternion(r4, QuaternionFromAxisAngle({ -1,-1,-1 }, PI / 2));
 			Box b4 = CreateBox(r4, extension);
 			MyDrawBox(b4, YELLOW);
+			boxVector.push_back(b4);
 
 			origin = { 5, 1, -8 };
 			extension = { 2, 1, 1.5};
@@ -264,8 +244,10 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r5 = ReferentialByQuarternion(r5, QuaternionFromAxisAngle({ 1,-1,1 }, PI / 2));
 			Box b5 = CreateBox(r5, extension);
 			MyDrawBox(b5, BLUE);
+			boxVector.push_back(b5);
 
 			origin = { 0, 0.5, -6 };
 			extension = { 1, 0.5, 2 };
@@ -277,7 +259,7 @@ int main(int argc, char* argv[])
 			};
 			Box b6 = CreateBox(r6, extension);
 			MyDrawBox(b6, DARKBLUE);
-
+			boxVector.push_back(b6);
 
 			origin = { 6, 1, 6 };
 			extension = { 1.5, 1, 3 };
@@ -287,8 +269,10 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r7 = ReferentialByQuarternion(r7, QuaternionFromAxisAngle({ -1,-1,1 }, PI / 2));
 			Box b7 = CreateBox(r7, extension);
 			MyDrawBox(b7, DARKBLUE);
+			boxVector.push_back(b7);
 
 			origin = { 0, 0.5, 8 };
 			extension = { 2, 0.5, 1 };
@@ -298,8 +282,10 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r8 = ReferentialByQuarternion(r8, QuaternionFromAxisAngle({ 0,-1,0 }, PI / 2));
 			Box b8 = CreateBox(r8, extension);
 			MyDrawBox(b8, MAROON);
+			boxVector.push_back(b8);
 
 			origin = { 5, 0.5, -2 };
 			extension = { 2, 0.5, 1 };
@@ -309,10 +295,12 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r9 = ReferentialByQuarternion(r9, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2));
 			Box b9 = CreateBox(r9, extension);
 			MyDrawBox(b9, GREEN);
+			boxVector.push_back(b9);
 
-			//----------------------------
+			//---------------------------- FIN INIT TERRAIN
 			
 			//InterSegmentQuad(s,b.faces[3],&interPt,&interNormal);
 
