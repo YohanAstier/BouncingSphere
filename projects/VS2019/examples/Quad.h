@@ -9,6 +9,7 @@
 #include "../projects/VS2019/examples/Sphere.h"
 #include "../projects/VS2019/examples/Utilities.h"
 #include "../projects/VS2019/examples/Plane.h"
+#include "Ball.h"
 
 struct Quad {
 	Referential r;
@@ -21,6 +22,13 @@ typedef struct Box {
 	Quad faces[6];
 } Box;
 
+typedef struct RoundedBox {
+	Box b;
+	float r;
+
+} RoundedBox;
+
+
 void MyDrawQuad(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadWire(Vector3 center, Vector2 size, Color color);
 void MyDrawQuadRotative(Quaternion q, Vector3 center, Vector2 size, Color color);
@@ -28,5 +36,10 @@ bool InterSegmentQuad(Segment seg, Quad quad, Vector3* interPt, Vector3* interNo
 void MyDrawQuadRotative(Quad quad, Color color);
 void MyDrawBox(Box box, Color color);
 Box CreateBox(Referential r, Vector3 extension);
+RoundedBox CreateRoundedBox(Referential r, Vector3 extension, float rad);
+bool interSegBox(Box b, Segment s, Vector3* interPt, Vector3* interNorm);
+; void drawRoundedBox(RoundedBox rb, Color color);
+bool interSegRoundedBox(RoundedBox rb, Segment s, Vector3* interPt, Vector3* interNorm);
+bool interDeplacementSphereRoundedBox(Segment s, Ball b, RoundedBox rb, Vector3* interPt, Vector3* interNorm);
 
 #endif

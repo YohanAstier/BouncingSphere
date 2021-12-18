@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
 			// Box dans le terrain
 			
 
-			origin = { 1, 1, 2 };
+			origin = { -0.5, 1, 0 };
 			extension = { 1,1,2 };
 			Referential r1 = {
 				origin,
@@ -299,17 +299,35 @@ int main(int argc, char* argv[])
 			Box b9 = CreateBox(r9, extension);
 			MyDrawBox(b9, GREEN);
 			boxVector.push_back(b9);
-
+			
 			//---------------------------- FIN INIT TERRAIN
+			MyDrawSphereEx2(b.s.pos, b.s.r, 24, 24, BLACK);
+			fall(&b, GetTime() - time);
+			time = GetTime();
+			Segment deplacement = moveBall(&b);
+			Vector3 interPt;
+			Vector3 interNorm;
+			int isBoing = 0;
 			
-			//InterSegmentQuad(s,b.faces[3],&interPt,&interNormal);
+			for each (Box box in boxVector)
+			{
+				
+				Segment test = { {0,10,0}, {0,-10,0} };
+				DrawLine3D(test.pt1, test.pt2, RED);
+				RoundedBox rb = CreateRoundedBox(box.r, box.extension, RADIUS);
+				drawRoundedBox(rb, BROWN);
+				if (interSegRoundedBox(rb, deplacement, &interPt, &interNorm ))
+				{
+					
+					boing(&b, interNorm);
+					moveBall(&b);
+					
 
-			//DrawSphere(interPt, .1f, GREEN);
+				}
+				
+			}
+
 			
-			//MyDrawSphereEx2(b.s.pos, b.s.r, 24, 24, BLUE);
-			//fall(&b, GetTime() - time);
-			//time = GetTime();
-			//b = moveBall(b);
 			
 		}
 		EndMode3D();

@@ -11,9 +11,10 @@ struct Ball{
 };
 
 Ball initBall(Vector3 pos, float radius);
-Ball moveBall(Ball b);
+Segment moveBall(Ball* b);
 Vector3 nextPos(Ball b);
 void fall(Ball* b, float deltaTime);
+void boing(Ball* b, Vector3 norm);
 #endif
 
 
