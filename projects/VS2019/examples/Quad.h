@@ -38,7 +38,6 @@ void MyDrawBox(Box box, Color color);
 Box CreateBox(Referential r, Vector3 extension);
 RoundedBox CreateRoundedBox(Referential r, Vector3 extension, float rad);
 bool interSegBox(Box b, Segment s, Vector3* interPt, Vector3* interNorm);
-; void drawRoundedBox(RoundedBox rb, Color color);
 bool interSegRoundedBox(RoundedBox rb, Segment s, Vector3* interPt, Vector3* interNorm);
 bool interDeplacementSphereRoundedBox(Segment s, Ball b, RoundedBox rb, Vector3* interPt, Vector3* interNorm);
 

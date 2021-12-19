@@ -173,8 +173,9 @@ bool interSegBox(Box b, Segment s, Vector3* interPt, Vector3* interNorm) {
 RoundedBox CreateRoundedBox(Referential r, Vector3 extension, float rad) {
 	RoundedBox rb;
 	rb.r = rad;
+	
+	Box box = { r,extension };
 
-	Box box = { r, extension };
 	// Face Up
 	box.faces[0] = { changeReferential(r,Vector3Scale(r.j,extension.y + rad),QuaternionIdentity()),{extension.x,0,extension.z} };
 	// Face Down
@@ -189,19 +190,8 @@ RoundedBox CreateRoundedBox(Referential r, Vector3 extension, float rad) {
 	box.faces[5] = { changeReferential(r,Vector3Scale(r.k, -extension.z - rad),QuaternionFromAxisAngle({ -1,0,0 }, PI / 2)),{extension.x,0,extension.y} };
 	
 	rb.b = box;
-
 	return rb;
 
-}
-
-void drawRoundedBox(RoundedBox rb, Color color) {
-	Box box = rb.b;
-	MyDrawQuadRotative(box.faces[0], RED);
-	MyDrawQuadRotative(box.faces[1], YELLOW);
-	MyDrawQuadRotative(box.faces[2], GREEN);
-	MyDrawQuadRotative(box.faces[3], PINK);
-	MyDrawQuadRotative(box.faces[4], PURPLE);
-	MyDrawQuadRotative(box.faces[5], ORANGE);
 }
 
 bool interSegRoundedBox(RoundedBox rb, Segment s, Vector3* interPt, Vector3* interNorm) {

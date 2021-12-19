@@ -2,6 +2,7 @@
 
 bool InterSegPlane(Segment s, Plane p, Vector3* interPt, Vector3* interNormalPt) {
 	Vector3 ab = Vector3Subtract(s.pt2, s.pt1);
+	
 	float dotAB = Vector3DotProduct(ab, p.normal);
 	if (fabs(dotAB) < EPSILON) return false;
 

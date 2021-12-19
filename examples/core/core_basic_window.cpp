@@ -63,16 +63,9 @@ int main(int argc, char* argv[])
 	camera.position = cameraPos;
 	camera.target = { 0.0f, 0.0f, 0.0f };
 	camera.up = { 0.0f, 10.0f, 0.0f };
-	camera.fovy = 45.f;
+	camera.fovy = 90.f;
 	camera.type = CAMERA_PERSPECTIVE;
 	SetCameraMode(camera, CAMERA_CUSTOM);  // Set an orbital camera mode
-
-	//TEST CONVERSION CARTESIAN->CYLINDRICAL
-	Vector3 pos = { 1,1,1 };
-	Cylindrical cyl = CartesianToCylindrical(pos);
-	printf("cyl = (%f,%f,%f) ", cyl.rho, cyl.theta, cyl.y);
-	cyl = cyl + cyl;
-	printf("cyl = (%f,%f,%f) ", cyl.rho, cyl.theta, cyl.y);
 
 	//init the ball
 	Ball b = initBall({ 0,10,0 }, RADIUS);
@@ -189,7 +182,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r1 = ReferentialByQuarternion(r1, QuaternionFromAxisAngle({ -1,-1,1 }, PI / 2));
+			r1 = ReferentialByQuarternion(r1, QuaternionFromAxisAngle({ -1,0,1 }, PI / 2));
 			Box b1 = CreateBox(r1, extension);
 
 			MyDrawBox(b1, RED);
@@ -218,7 +211,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r3 = ReferentialByQuarternion(r3, QuaternionFromAxisAngle({ 1,-1,1 }, PI / 2));
+			r3 = ReferentialByQuarternion(r3, QuaternionFromAxisAngle({ 1,0,-1 }, PI / 2));
 			Box b3 = CreateBox(r3, extension);
 			MyDrawBox(b3, PURPLE);
 			boxVector.push_back(b3);
@@ -231,7 +224,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r4 = ReferentialByQuarternion(r4, QuaternionFromAxisAngle({ -1,-1,-1 }, PI / 2));
+			r4 = ReferentialByQuarternion(r4, QuaternionFromAxisAngle({ -1,0,-1 }, PI / 2));
 			Box b4 = CreateBox(r4, extension);
 			MyDrawBox(b4, YELLOW);
 			boxVector.push_back(b4);
@@ -244,7 +237,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r5 = ReferentialByQuarternion(r5, QuaternionFromAxisAngle({ 1,-1,1 }, PI / 2));
+			r5 = ReferentialByQuarternion(r5, QuaternionFromAxisAngle({ 0,-1,1 }, PI / 2));
 			Box b5 = CreateBox(r5, extension);
 			MyDrawBox(b5, BLUE);
 			boxVector.push_back(b5);
@@ -269,7 +262,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r7 = ReferentialByQuarternion(r7, QuaternionFromAxisAngle({ -1,-1,1 }, PI / 2));
+			r7 = ReferentialByQuarternion(r7, QuaternionFromAxisAngle({ -1,-1,0 }, PI / 2));
 			Box b7 = CreateBox(r7, extension);
 			MyDrawBox(b7, DARKBLUE);
 			boxVector.push_back(b7);
@@ -282,7 +275,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r8 = ReferentialByQuarternion(r8, QuaternionFromAxisAngle({ 0,-1,0 }, PI / 2));
+			r8 = ReferentialByQuarternion(r8, QuaternionFromAxisAngle({ 0,-1,1 }, PI / 2));
 			Box b8 = CreateBox(r8, extension);
 			MyDrawBox(b8, MAROON);
 			boxVector.push_back(b8);
@@ -295,7 +288,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r9 = ReferentialByQuarternion(r9, QuaternionFromAxisAngle({ 0,1,0 }, PI / 2));
+			r9 = ReferentialByQuarternion(r9, QuaternionFromAxisAngle({ 1,1,0 }, PI / 2));
 			Box b9 = CreateBox(r9, extension);
 			MyDrawBox(b9, GREEN);
 			boxVector.push_back(b9);
@@ -308,23 +301,14 @@ int main(int argc, char* argv[])
 			Vector3 interPt;
 			Vector3 interNorm;
 			int isBoing = 0;
-			
 			for each (Box box in boxVector)
 			{
-				
-				Segment test = { {0,10,0}, {0,-10,0} };
-				DrawLine3D(test.pt1, test.pt2, RED);
-				RoundedBox rb = CreateRoundedBox(box.r, box.extension, RADIUS);
-				drawRoundedBox(rb, BROWN);
-				if (interSegRoundedBox(rb, deplacement, &interPt, &interNorm ))
-				{
-					
-					boing(&b, interNorm);
-					moveBall(&b);
-					
-
-				}
-				
+				RoundedBox rb = CreateRoundedBox(box.r,box.extension, RADIUS);
+					if (interSegRoundedBox(rb,deplacement, &interPt, &interNorm))
+					{
+						boing(&b, interNorm);
+						moveBall(&b);
+					}
 			}
 
 			
