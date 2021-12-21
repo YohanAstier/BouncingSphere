@@ -34,7 +34,7 @@ Vector3 LocalToGlobalVect(Vector3 localVec, Referential localRef) {
 
 }
 
-Referential ReferentialByQuarternion(Referential r, Quaternion q) {
+Referential RotateReferential(Referential r, Quaternion q) {
 	Vector3 i2 = Vector3RotateByQuaternion(r.i, q);
 	Vector3 j2 = Vector3RotateByQuaternion(r.j, q);
 	Vector3 k2 = Vector3RotateByQuaternion(r.k, q);
@@ -44,6 +44,6 @@ Referential ReferentialByQuarternion(Referential r, Quaternion q) {
 
 Referential changeReferential(Referential ref, Vector3 translation, Quaternion rotation) {
 	Referential rResult = { Vector3Add(ref.origin,translation),ref.i, ref.j, ref.k, ref.quat };
-	rResult = ReferentialByQuarternion(rResult, rotation);
+	rResult = RotateReferential(rResult, rotation);
 	return rResult;
 }

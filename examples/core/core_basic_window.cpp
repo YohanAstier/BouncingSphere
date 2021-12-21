@@ -32,6 +32,7 @@
 #include "../projects/VS2019/examples/Plane.h"
 #include "../projects/VS2019/examples/Ball.h"
 #include "../../projects/VS2019/examples/Utilities.h"
+#include "../../projects/VS2019/examples/Box.h"
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
@@ -47,8 +48,8 @@ template <typename T> int sgn(T val) {
 
 int main(int argc, char* argv[])
 {
-	// Initialization
-	//--------------------------------------------------------------------------------------
+	//-------------- INIT
+	//
 	float screenSizeCoef = 1.4f;
 	const int screenWidth = 1000 * screenSizeCoef;
 	const int screenHeight = 820 * screenSizeCoef;
@@ -73,10 +74,6 @@ int main(int argc, char* argv[])
 	// Main game loop
 	while (!WindowShouldClose())    // Detect window close button or ESC key
 	{
-		// Update
-		//----------------------------------------------------------------------------------
-		// TODO: Update your variables here
-		//----------------------------------------------------------------------------------
 
 		float deltaTime = GetFrameTime();
 		float time = (float)GetTime();
@@ -91,19 +88,8 @@ int main(int argc, char* argv[])
 
 		BeginMode3D(camera);
 		{
-			//
-
-			//3D REFERENTIAL
 			HideCursor();
-			Quaternion qOrient = QuaternionFromAxisAngle(Vector3Normalize({ 1,-3,-4}), time);
-
-			//DrawGrid(20, 1.0f);        // Draw a grid
-			//DrawLine3D({ 0 }, { 0,10,0 }, DARKGRAY);
-			//DrawSphere({ 10,0,0 }, .2f, RED);
-			//DrawSphere({ 0,0,10 }, .2f, BLUE);
-			//DrawSphere({ 0,10,0 }, .2f, GREEN);
-			
-			/////// INITIALISATION DU TERRAIN
+			//------------------- INITIALISATION DU TERRAIN
 			std::vector<Box> boxVector;
 			// Terrain
 			// Sol
@@ -114,7 +100,7 @@ int main(int argc, char* argv[])
 				{1,0,0},
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()};
-			Referential rGround = ReferentialByQuarternion(r, quat);
+			Referential rGround = RotateReferential(r, quat);
 			Box bGround = CreateBox(rGround, extension);
 			MyDrawBox(bGround,LIME);
 			boxVector.push_back(bGround);
@@ -170,8 +156,8 @@ int main(int argc, char* argv[])
 			MyDrawBox(bRight, LIGHTGRAY);
 			boxVector.push_back(bRight);
 
-			//----------------------
-			// Box dans le terrain
+			//
+			//-------------------- INIT BOX TERRAIN
 			
 
 			origin = { -0.5, 1, 0 };
@@ -182,7 +168,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r1 = ReferentialByQuarternion(r1, QuaternionFromAxisAngle({ -1,0,1 }, PI / 2));
+			r1 = RotateReferential(r1, QuaternionFromAxisAngle({ 1,0,1 }, PI / 2));
 			Box b1 = CreateBox(r1, extension);
 
 			MyDrawBox(b1, RED);
@@ -197,7 +183,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r2 = ReferentialByQuarternion(r2, QuaternionFromAxisAngle({ 1,1,0 }, PI / 2));
+			r2 = RotateReferential(r2, QuaternionFromAxisAngle({ 1,0,-1 }, PI / 2));
 			Box b2 = CreateBox(r2, extension);
 			MyDrawBox(b2, GOLD);
 			boxVector.push_back(b2);
@@ -211,7 +197,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r3 = ReferentialByQuarternion(r3, QuaternionFromAxisAngle({ 1,0,-1 }, PI / 2));
+			r3 = RotateReferential(r3, QuaternionFromAxisAngle({ 1,0,1 }, PI / 2));
 			Box b3 = CreateBox(r3, extension);
 			MyDrawBox(b3, PURPLE);
 			boxVector.push_back(b3);
@@ -224,7 +210,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r4 = ReferentialByQuarternion(r4, QuaternionFromAxisAngle({ -1,0,-1 }, PI / 2));
+			r4 = RotateReferential(r4, QuaternionFromAxisAngle({ 1,0,1 }, PI / 2));
 			Box b4 = CreateBox(r4, extension);
 			MyDrawBox(b4, YELLOW);
 			boxVector.push_back(b4);
@@ -237,7 +223,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r5 = ReferentialByQuarternion(r5, QuaternionFromAxisAngle({ 0,-1,1 }, PI / 2));
+			r5 = RotateReferential(r5, QuaternionFromAxisAngle({ 0,-1,1 }, PI / 2));
 			Box b5 = CreateBox(r5, extension);
 			MyDrawBox(b5, BLUE);
 			boxVector.push_back(b5);
@@ -250,6 +236,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
+			r6 = RotateReferential(r6, QuaternionFromAxisAngle({ -1,0,1 }, PI / 2));
 			Box b6 = CreateBox(r6, extension);
 			MyDrawBox(b6, DARKBLUE);
 			boxVector.push_back(b6);
@@ -262,7 +249,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r7 = ReferentialByQuarternion(r7, QuaternionFromAxisAngle({ -1,-1,0 }, PI / 2));
+			r7 = RotateReferential(r7, QuaternionFromAxisAngle({ 1,0,-1 }, PI / 2));
 			Box b7 = CreateBox(r7, extension);
 			MyDrawBox(b7, DARKBLUE);
 			boxVector.push_back(b7);
@@ -275,7 +262,7 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r8 = ReferentialByQuarternion(r8, QuaternionFromAxisAngle({ 0,-1,1 }, PI / 2));
+			r8 = RotateReferential(r8, QuaternionFromAxisAngle({ -1,0,1 }, PI / 2));
 			Box b8 = CreateBox(r8, extension);
 			MyDrawBox(b8, MAROON);
 			boxVector.push_back(b8);
@@ -288,12 +275,14 @@ int main(int argc, char* argv[])
 				{0,1,0},
 				{0,0,1}, QuaternionIdentity()
 			};
-			r9 = ReferentialByQuarternion(r9, QuaternionFromAxisAngle({ 1,1,0 }, PI / 2));
+			r9 = RotateReferential(r9, QuaternionFromAxisAngle({ 1,1,0 }, PI / 2));
 			Box b9 = CreateBox(r9, extension);
 			MyDrawBox(b9, GREEN);
 			boxVector.push_back(b9);
 			
 			//---------------------------- FIN INIT TERRAIN
+
+			//---------------------------- BALL COLLISION ET MOUVEMENT
 			MyDrawSphereEx2(b.s.pos, b.s.r, 24, 24, BLACK);
 			fall(&b, GetTime() - time);
 			time = GetTime();
@@ -306,11 +295,12 @@ int main(int argc, char* argv[])
 				RoundedBox rb = CreateRoundedBox(box.r,box.extension, RADIUS);
 					if (interSegRoundedBox(rb,deplacement, &interPt, &interNorm))
 					{
-						boing(&b, interNorm);
+						BounceBall(&b, interNorm);
 						moveBall(&b);
 					}
 			}
-
+			
+			//---------------------------- FIN BALL COLLISION ET MOUVEMENT
 			
 			
 		}

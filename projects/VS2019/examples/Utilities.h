@@ -19,6 +19,6 @@ Vector3 GlobalToLocalVect(Vector3 vectGlobal, Referential localRef);
 Vector3 GlobalToLocalPos(Vector3 posGlobal, Referential localRef);
 Vector3 LocalToGlobalVect(Vector3 localVect, Referential localRef);
 Vector3 LocalToGlobalPos(Vector3 localPos, Referential localRef);
-Referential ReferentialByQuarternion(Referential r, Quaternion q);
+Referential RotateReferential(Referential r, Quaternion q);
 Referential changeReferential(Referential ref, Vector3 translation, Quaternion rotation);
 #endif // !_UTILITIES_H_

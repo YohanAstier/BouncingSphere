@@ -26,6 +26,6 @@ void fall(Ball* b, float deltaTime) {
 	b->dir = Vector3Subtract(b->dir, { 0, 9.81f * deltaTime, 0 });
 }
 
-void boing(Ball* b, Vector3 norm) {
+void BounceBall(Ball* b, Vector3 norm) {
 	b->dir = Vector3Reflect(b->dir, norm);
 }
